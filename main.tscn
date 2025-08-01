@@ -1,11 +1,23 @@
-[gd_scene load_steps=47 format=3 uid="uid://c3fj1i64fol17"]
+[gd_scene load_steps=52 format=3 uid="uid://c3fj1i64fol17"]
 
 [ext_resource type="Script" uid="uid://cati7ge1tdu23" path="res://character.gd" id="1_0xm2m"]
+[ext_resource type="Texture2D" uid="uid://n0e4hoed0o8p" path="res://assets/objects/backgr.png" id="1_272bh"]
 [ext_resource type="Texture2D" uid="uid://46jr1lh7mc33" path="res://assets/man/Animations/Animations/Walking.png" id="2_0xm2m"]
 [ext_resource type="Texture2D" uid="uid://cji2blkxlo0yc" path="res://assets/man/Animations/Animations/Running.png" id="2_1bvp3"]
 [ext_resource type="Texture2D" uid="uid://iud0pjf46rg2" path="res://assets/man/Animations/Animations/Upward Jump.png" id="2_7mycd"]
-[ext_resource type="Texture2D" uid="uid://b3qsks54mblrj" path="res://icon.svg" id="2_h2yge"]
 [ext_resource type="Texture2D" uid="uid://wwyyqs54usnm" path="res://assets/man/Animations/Animations/Jumping.png" id="2_lquwl"]
+[ext_resource type="Texture2D" uid="uid://dkg5pih8k6v2e" path="res://assets/objects/floor.png" id="7_5vw27"]
+[ext_resource type="Texture2D" uid="uid://7rlm08fxu67h" path="res://assets/objects/door.png" id="8_4c57u"]
+[ext_resource type="Script" uid="uid://67qa5ocu5rhb" path="res://door.gd" id="9_efxa6"]
+[ext_resource type="PackedScene" uid="uid://b8laojr1j2204" path="res://interaction/interaction area/interaction_area.tscn" id="10_dg77c"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_h2yge"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lquwl"]
+size = Vector2(1930, 164)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ycdy4"]
+size = Vector2(117.271, 197.5)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_h8e4i"]
 atlas = ExtResource("2_7mycd")
@@ -285,15 +297,46 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1bvp3"]
 size = Vector2(116, 122)
 
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_h2yge"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_lquwl"]
-size = Vector2(1172, 133)
-
 [node name="main" type="Node2D"]
 
+[node name="background" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(1.0026, 1)
+texture = ExtResource("1_272bh")
+centered = false
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(-3, 531)
+physics_material_override = SubResource("PhysicsMaterial_h2yge")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(955, 41)
+shape = SubResource("RectangleShape2D_lquwl")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(958, 40.5)
+scale = Vector2(1, 0.670732)
+texture = ExtResource("7_5vw27")
+
+[node name="door" type="Sprite2D" parent="."]
+position = Vector2(779, 449)
+scale = Vector2(0.142129, 0.142129)
+texture = ExtResource("8_4c57u")
+script = ExtResource("9_efxa6")
+
+[node name="InteractionArea" parent="door" instance=ExtResource("10_dg77c")]
+position = Vector2(-4639.02, -1167.11)
+scale = Vector2(2.93981, 2.93981)
+action_name = " open"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="door/InteractionArea"]
+position = Vector2(1552.87, 389.25)
+scale = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_ycdy4")
+
 [node name="character" type="CharacterBody2D" parent="." node_paths=PackedStringArray("PlayerSprite", "PlayerCollider")]
-position = Vector2(292, 196)
+position = Vector2(392, 251)
+collision_layer = 3
 script = ExtResource("1_0xm2m")
 PlayerSprite = NodePath("Sprite2D")
 PlayerCollider = NodePath("CollisionShape2D")
@@ -310,15 +353,5 @@ animation = &"idle"
 position = Vector2(0, -2)
 shape = SubResource("RectangleShape2D_1bvp3")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-position = Vector2(-3, 531)
-physics_material_override = SubResource("PhysicsMaterial_h2yge")
-
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
-position = Vector2(576.5, 60)
-scale = Vector2(9.11719, 0.953125)
-texture = ExtResource("2_h2yge")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(576, 56.5)
-shape = SubResource("RectangleShape2D_lquwl")
+[node name="Camera2D" type="Camera2D" parent="character"]
+zoom = Vector2(1.5, 1.5)
